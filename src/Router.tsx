@@ -1,16 +1,32 @@
-import { Route, Routes } from "react-router-dom";
-import Login from "./pages/Login";
-import SignUp from "./pages/SignUp";
-import Home from "./pages/Home";
-import PokemonDetail from "./pages/PokemonDetail";
+import { Routes, Route } from 'react-router-dom';
+import Layout from './components/LayoutDefault/Layout';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import SignUp from './pages/SignUp';
+import PokemonDetail from './pages/PokemonDetail';
 
 export function Router() {
     return (
         <Routes>
-            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/cadastrar" element={<SignUp />} />
-            <Route path="/detail/:id" element={<PokemonDetail />} />
+
+            <Route path="/"
+                element={
+                    <Layout>
+                        <Home />
+                    </Layout>
+                }
+            />
+
+
+            <Route path="/detail/:id"
+                element={
+                    <Layout>
+                        <PokemonDetail />
+                    </Layout>
+                }
+            />
         </Routes>
-    )
+    );
 }

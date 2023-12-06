@@ -9,8 +9,8 @@ function App() {
   return (
     <BrowserRouter>
       <ThemeProvider>
-        <Router />
         <ToastContainer theme="colored" />
+        <Router />
       </ThemeProvider>
     </BrowserRouter>
   )
