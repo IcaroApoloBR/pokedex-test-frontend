@@ -3,8 +3,6 @@ import { Link, useParams } from 'react-router-dom';
 import { getPokemonDetails, PokemonDetails } from '../services/api';
 import { LoadingScreen } from '../components/LoadingScreen';
 import { Button } from '../components/Button';
-import Navbar from '../components/LayoutDefault/Navbar';
-import Footer from '../components/LayoutDefault/Footer';
 import ToggleDarkMode from '../components/FiltersBar/ToggleDarkMode';
 
 interface DetailProps {
@@ -31,7 +29,6 @@ function Detail() {
     return (
         <>
             <section className="w-full h-full bg-whiteSecondary dark:bg-darkPrimary">
-                <Navbar />
                 <div className='mt-20 p-4 flex justify-between'>
                     <Button type="button">
                         <Link to="/">
@@ -48,10 +45,10 @@ function Detail() {
                             <h2 className="font-bold text-2xl text-gray-900 dark:text-gray-200">{pokemonDetails.name} #{pokemonDetails.id}</h2>
                         </div>
 
-                        <div className="font-light text-sm flex gap-1 text-gray-900 dark:text-gray-200">
+                        <div className=" text-sm flex gap-1 text-gray-900 dark:text-gray-200">
                             {pokemonDetails.types.map((type, index) => {
                                 return (
-                                    <div key={index} className="p-1 border-2 rounded-lg border-redPrimary shadow-md shadow-redSecondary text-redSecondary">
+                                    <div key={index} className="p-1 border-2 rounded-lg border-redPrimary shadow-sm shadow-redSecondary text-redSecondary">
                                         {type.type.name}
                                     </div>
                                 )
@@ -79,7 +76,7 @@ function Detail() {
                             <div>
                                 <h2 className="font-bold text-lg text-gray-900 dark:text-gray-200">Stats</h2>
                                 {pokemonDetails.stats.map((stat, index) => (
-                                    <div key={index} className="grid grid-cols-2 gap-4 text-gray-900 dark:text-gray-200 font-light">
+                                    <div key={index} className="grid grid-cols-2 gap-4 text-gray-900 dark:text-gray-200 ">
                                         <span>{stat.stat.name}</span>
                                         <span>{stat.base_stat}</span>
                                     </div>
@@ -89,7 +86,7 @@ function Detail() {
                             <div>
                                 <h2 className="font-bold text-lg text-gray-900 dark:text-gray-200">Abilities</h2>
                                 {pokemonDetails.abilities.map((ability, index) => (
-                                    <div key={index} className="text-gray-900 dark:text-gray-200 font-light">
+                                    <div key={index} className="text-gray-900 dark:text-gray-200 ">
                                         <span>{ability.ability.name}</span>
                                     </div>
                                 ))}
@@ -103,10 +100,7 @@ function Detail() {
                         </p>
                     </LoadingScreen>
                 )}
-
-                <Footer />
-            </section >
-
+            </section>
         </>
     );
 }

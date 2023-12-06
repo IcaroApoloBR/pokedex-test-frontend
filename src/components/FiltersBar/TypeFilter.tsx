@@ -25,7 +25,7 @@ const TypeFilter = ({ onSelectType }: TypeFilterProps) => {
     return (
         <div>
             <select
-                className="hover:scale-95 duration-300 bg-whitePrimary dark:bg-darkSecondary rounded-lg border-2 border-colorSecondary p-3 text-sm text-gray-900 dark:text-gray-200 focus:border-colorPrimary outline-colorPrimary"
+                className="hover:scale-95 duration-300 bg-whitePrimary dark:bg-darkSecondary rounded-lg shadow-sm shadow-colorSecondary border-2 border-colorSecondary p-3 text-sm text-gray-900 dark:text-gray-200 focus:border-colorPrimary outline-colorPrimary font-medium"
                 onChange={(e) => onSelectType(e.target.value)}>
                 <option value="">All types</option>
                 {types.map((type) => (

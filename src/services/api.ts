@@ -1,4 +1,4 @@
-const BASE_URL = 'https://pokeapi.co/api/v2';
+const BASE_URL = 'https://pokeapi.co/api/v2/pokemon';
 
 interface PokemonProps {
   id: number;
@@ -20,7 +20,7 @@ export interface PokemonDetails {
 
 export const searchPokemon = async (pokemon: string): Promise<PokemonProps> => {
   try {
-    const url = `${BASE_URL}/pokemon/${pokemon}`
+    const url = `${BASE_URL}/${pokemon}`
     const response = await fetch(url)
     return await response.json()
   } catch (error) {
@@ -31,7 +31,7 @@ export const searchPokemon = async (pokemon: string): Promise<PokemonProps> => {
 
 export const getPokemons = async (limit: number = 50, offset: number = 0): Promise<any> => {
   try {
-    const url = `${BASE_URL}/pokemon?limit=${limit}&offset=${offset}`
+    const url = `${BASE_URL}?limit=${limit}&offset=${offset}`
     const response = await fetch(url)
     return await response.json()
   } catch (error) {
@@ -52,7 +52,7 @@ export const getPokemonData = async (url: string): Promise<any> => {
 
 export const getPokemonDetails = async (id: number): Promise<PokemonProps> => {
   try {
-    const url = `${BASE_URL}/pokemon/${id}`
+    const url = `${BASE_URL}/${id}`
     const response = await fetch(url)
     return await response.json()
   } catch (error) {
@@ -60,17 +60,3 @@ export const getPokemonDetails = async (id: number): Promise<PokemonProps> => {
     throw error;
   }
 }
-
-export const getPokemonEvolution = async (id: number): Promise<PokemonDetails> => {
-  try {
-    const url = `${BASE_URL}/pokemon-species/${id}`
-    const response = await fetch(url)
-    const speciesData = await response.json();
-    const evolutionChainId = speciesData.evolution_chain.url.match(/\/(\d+)\//)[1];
-    const evolutionResponse = await fetch(`https://pokeapi.co/api/v2/evolution-chain/${evolutionChainId}`);
-    return await evolutionResponse.json();
-  } catch (error) {
-    console.error("error: ", error);
-    throw error;
-  }
-};

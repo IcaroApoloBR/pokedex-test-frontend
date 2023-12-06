@@ -68,7 +68,7 @@ const Pokedex = ({ pokemons, isLoadingFetch, page, setPage, totalPages }: Pokede
                 {isLoadingFetch ? (
                     <LoadingScreen>
                         <p className="text-gray-200 font-medium text-xl">
-                            Aguarde, <span className="text-redSecondary font-semibold">listando</span> todos os Pokemons ...
+                            Wait, <span className="text-redSecondary font-semibold">listing</span> all pokemons ...
                         </p>
                     </LoadingScreen>
                 ) : (
