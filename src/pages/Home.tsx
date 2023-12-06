@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
-import Footer from "../components/LayoutDefault/Footer";
-import Navbar from "../components/LayoutDefault/Navbar";
-import PlayerMusic from "../components/PlayerMusic";
-import ScrollToTopButton from "../components/ScrollToTopButton";
 import ToggleDarkMode from "../components/FiltersBar/ToggleDarkMode";
 import Pokedex from "../components/Pokedex";
-import { getPokemonData, getPokemons, searchPokemon, getPokemonEvolution } from "../services/api";
-import Searchbar from "../components/FiltersBar/Searchbar";
+import { getPokemonData, getPokemons, searchPokemon } from "../services/api";
+import SearchBar from "../components/FiltersBar/SearchBar";
 import TypeFilter from "../components/FiltersBar/TypeFilter";
 import SortDropdown from "../components/FiltersBar/SortDropdown";
+import { ErrorMessage } from "../components/ErrorMessage";
+import { toast } from "react-toastify";
 
 export default function Home() {
     const itensPerPage = 50;
@@ -17,6 +15,7 @@ export default function Home() {
 
     const [isLoadingFetch, setIsLoadingFetch] = useState(false);
     const [notFound, setNotFound] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
 
     const [pokemonsList, setPokemonsList] = useState([]);
 
@@ -37,6 +36,8 @@ export default function Home() {
             setTotalPages(Math.ceil(data.count / itensPerPage));
         } catch (error) {
             console.log("fetchPokemons error: ", error);
+        } finally {
+            setIsLoadingFetch(false);
         }
     };
 
@@ -57,10 +58,10 @@ export default function Home() {
         const sortedPokemons = [...pokemonsList];
 
         sortedPokemons.sort((a, b) => {
-            const nameA = a.name.toUpperCase();
-            const nameB = b.name.toUpperCase();
+            const orderA = a.name.toUpperCase();
+            const orderZ = b.name.toUpperCase();
 
-            return order === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+            return order === 'asc' ? orderA.localeCompare(orderZ) : orderZ.localeCompare(orderA);
         });
         setPokemonsList(sortedPokemons);
     };
@@ -70,19 +71,23 @@ export default function Home() {
             return fetchPokemons();
         }
 
-        setIsLoadingFetch(true)
-        setNotFound(false)
+        try {
+            setIsLoadingFetch(true);
 
-        const result = await searchPokemon(pokemon)
-        if (!result) {
-            setNotFound(true)
-        } else {
-            setPokemonsList([result])
-            setPage(0)
-            setTotalPages(1)
+            const foundPokemon = await searchPokemon(pokemon);
+
+            if (foundPokemon) {
+                setPokemonsList([foundPokemon]);
+                setPage(0);
+                setTotalPages(1);
+            }
+        } catch (error) {
+            setNotFound(true);
+            setErrorMessage("Sorry trainer, no Pokemon found.");
+        } finally {
+            setIsLoadingFetch(false);
         }
-        setIsLoadingFetch(false)
-    }
+    };
 
     useEffect(() => {
         fetchPokemons();
@@ -90,11 +95,9 @@ export default function Home() {
 
     return (
         <section className="w-full h-full bg-whiteSecondary dark:bg-darkPrimary">
-            <Navbar />
-
             <div className="mt-20 p-6 h-full">
                 <div className="w-full flex items-center justify-between flex-wrap gap-4">
-                    <Searchbar onSearch={onSearchHandler} />
+                    <SearchBar onSearch={onSearchHandler} />
 
                     <div className="flex items-start gap-4">
                         <TypeFilter onSelectType={handleTypeSelect} />
@@ -104,26 +107,17 @@ export default function Home() {
                 </div>
 
                 {notFound ? (
-                    <div className="flex justify-center h-screen">
-                        <p className="text-colorSecondary font-semibold text-center my-8">
-                            * Sorry trainer, unfortunately there are no Pokemon related to your search.
-                        </p>
-                    </div>) :
-                    (<Pokedex
+                    <ErrorMessage message={errorMessage} />
+                ) : (
+                    <Pokedex
                         pokemons={pokemonsList}
                         isLoadingFetch={isLoadingFetch}
                         page={page}
                         setPage={setPage}
                         totalPages={totalPages}
-                    />)}
+                    />
+                )}
             </div>
-
-            <footer>
-                <PlayerMusic />
-                <ScrollToTopButton />
-                <Footer />
-            </footer>
-
         </section >
     )
 }
