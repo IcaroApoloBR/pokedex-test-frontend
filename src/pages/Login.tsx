@@ -6,8 +6,9 @@ import { Icon } from '@iconify/react';
 import { Button } from "../components/Button";
 import { toast } from "react-toastify";
 import logo from '../assets/logo.png';
-import background from '../assets/background.jpg';
+import backgroundLogin from '../assets/backgroundLogin.jpg';
 import { FormSignIn, SignInDataProps } from "./types/FormSignIn.types";
+import { Link } from "react-router-dom";
 
 export default function Login() {
     const [email, setEmail] = useState('')
@@ -38,8 +39,8 @@ export default function Login() {
             console.log(result)
 
             if (result?.error) {
-                setErrorMessage("E-mail ou senha incorretos");
-                toast.error("Credenciais inválidas");
+                setErrorMessage("Incorrect email or password");
+                toast.error("Invalid credentials");
             } else {
                 // router.push("/churras");
             }
@@ -59,7 +60,7 @@ export default function Login() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5 }}
                 >
-                    <img src={background} className="h-full brightness-50 object-cover" alt="Pokemon Background" />
+                    <img src={backgroundLogin} className="h-full brightness-50 object-cover" alt="Pokemon Background" />
                 </motion.div>
 
                 <motion.div
@@ -85,7 +86,7 @@ export default function Login() {
                                 <input
                                     type="text"
                                     {...register('email')}
-                                    autoComplete="email"
+                                    autoComplete="off"
                                     value={email || ''}
                                     onChange={(e) => setEmail(e.target.value)}
                                     className="text-sm border focus:ring-colorPrimary outline-none border-colorSecondary focus:border-colorPrimary pl-10 p-3 w-full  bg-darkSecondary placeholder-gray-400 text-gray-200 rounded-md focus:z-10 sm:text-sm"
@@ -112,14 +113,14 @@ export default function Login() {
                                     value={password || ''}
                                     onChange={(e) => setPassword(e.target.value)}
                                     className="text-sm border focus:ring-colorPrimary outline-none border-colorSecondary focus:border-colorPrimary pl-10 p-3 w-full  bg-darkSecondary placeholder-gray-400 text-gray-200 rounded-md focus:z-10 sm:text-sm"
-                                    placeholder="Senha"
+                                    placeholder="Password"
                                 />
                                 {errors.password && <span className="text-red-500 text-sm">{errors.password.message}</span>}
                             </div>
 
                             <div className="flex items-center justify-start">
                                 <a href="/cadastrar" className="text-sm font-semibold text-colorPrimary hover:text-colorSecondary">
-                                    Ainda não é um treinador? Criar conta
+                                    Not a pokemon trainer yet? Create an account
                                 </a>
                             </div>
 
@@ -127,10 +128,9 @@ export default function Login() {
                                 <Button
                                     type="submit"
                                     disabled={!email && !password}>
-                                    {isLoading ? "Entrando..." : "Entrar"}
+                                    {isLoading ? "Signing in..." : "Sign in"}
                                 </Button>
                             </div>
-
                         </form>
                     </div>
                 </motion.div>
