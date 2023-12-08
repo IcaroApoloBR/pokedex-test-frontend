@@ -2,9 +2,22 @@ import axios from 'axios';
 
 const BASE_URL = 'https://pokeapi.co/api/v2/pokemon';
 
-export interface PokemonProps {
+export interface Pokemon {
+  base_experience: number;
+  height: number;
   id: number;
   name: string;
+  img: string;
+  status: {
+    attack: number;
+    defense: number;
+    hp: number;
+    special_attack: number;
+    special_defense: number;
+    speed: number;
+  };
+  abilities: [''];
+  weight: number;
 }
 
 export interface PokemonDetails {
@@ -19,10 +32,11 @@ export interface PokemonDetails {
   abilities: number;
 }
 
-export const searchPokemon = async (pokemon: string): Promise<PokemonProps> => {
+export const searchPokemon = async (pokemon: string): Promise<Pokemon> => {
   try {
     const url = `${BASE_URL}/${pokemon}`;
     const response = await axios.get(url);
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('error: ', error);
@@ -56,8 +70,7 @@ export const getPokemonData = async (url: string): Promise<any> => {
 
 export const getPokemonDetails = async (
   id: number
-): Promise<PokemonProps> => {
-  console.log("id", id)
+): Promise<Pokemon> => {
   try {
     const url = `${BASE_URL}/${id}`;
     const response = await axios.get(url);

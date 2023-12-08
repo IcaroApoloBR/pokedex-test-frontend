@@ -48,7 +48,7 @@ function Detail() {
                         <div className=" text-sm flex gap-1 text-gray-900 dark:text-gray-200">
                             {pokemonDetails.types.map((type, index) => {
                                 return (
-                                    <div key={index} className="p-1 border-2 rounded-lg border-redPrimary shadow-sm shadow-redSecondary text-redSecondary">
+                                    <div key={index} className="p-1 border-2 rounded-lg  shadow-sm ">
                                         {type.type.name}
                                     </div>
                                 )

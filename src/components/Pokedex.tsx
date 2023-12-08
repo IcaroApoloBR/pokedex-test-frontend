@@ -2,19 +2,17 @@ import { Link } from 'react-router-dom';
 import { LoadingScreen } from './LoadingScreen';
 import Pagination from './Pagination';
 import PokemonCard from './PokemonCard';
-// import { useEffect, useState } from 'react';
-// import { Modal } from './Modal';
-// import { getPokemonEvolution } from '../services/api';
+import { usePokemonContext } from '../context/PokemonContext';
 
 interface PokedexProps {
     pokemons: [];
     isLoadingFetch: boolean;
-    page: number;
-    setPage: React.Dispatch<React.SetStateAction<number>>;
     totalPages: number;
 }
 
-const Pokedex = ({ pokemons, isLoadingFetch, page, setPage, totalPages }: PokedexProps) => {
+const Pokedex = ({ pokemons, isLoadingFetch, totalPages }: PokedexProps) => {
+    const { page, setPage } = usePokemonContext();
+
     const onLeftClickHandler = () => {
         if (page > 0) {
             setPage(page - 1);
@@ -22,38 +20,10 @@ const Pokedex = ({ pokemons, isLoadingFetch, page, setPage, totalPages }: Pokede
     };
 
     const onRightClickHandler = () => {
-        if (page + 1 !== totalPages) {
+        if (page < totalPages - 1) {
             setPage(page + 1);
         }
     };
-
-    // const [selectedPokemon, setSelectedPokemon] = useState(null);
-    // const [evolutionData, setEvolutionData] = useState(null);
-    // const [isModalOpen, setIsModalOpen] = useState(false);
-
-    // const openModal = (pokemon) => {
-    //     setSelectedPokemon(pokemon);
-    //     setIsModalOpen(true);
-    // };
-
-    // const closeModal = () => {
-    //     setSelectedPokemon(null);
-    //     setIsModalOpen(false);
-    //     setEvolutionData(null);
-    // }
-
-    // useEffect(() => {
-    //     if (selectedPokemon) {
-    //         getPokemonEvolution(selectedPokemon.id)
-    //             .then((evolutionData) => {
-    //                 console.log(evolutionData);
-    //                 setEvolutionData(evolutionData);
-    //             })
-    //             .catch((error) => {
-    //                 console.error("Error fetching evolution data: ", error);
-    //             });
-    //     }
-    // }, [selectedPokemon]);
 
     return (
         <section className="max-w-7xl mx-auto">
@@ -73,24 +43,13 @@ const Pokedex = ({ pokemons, isLoadingFetch, page, setPage, totalPages }: Pokede
                     </LoadingScreen>
                 ) : (
                     <>
-                        <div className="flex flex-wrap gap-6 justify-center">
+                        <div className="flex flex-wrap gap-6 justify-center items-center">
                             {pokemons && pokemons.map((pokemon, index) => (
-                                // <div key={index} onClick={() => openModal(pokemon)} className="cursor-pointer">
-                                //     <PokemonCard pokemon={pokemon} />
-                                // </div>
                                 <Link to={`/detail/${pokemon.id}`} key={index}>
                                     <PokemonCard key={index} pokemon={pokemon} />
                                 </Link>
                             ))}
                         </div>
-
-                        {/* <Modal
-                            open={isModalOpen}
-                            onClose={closeModal}
-                            title={`Evoluções do Pokemon:`}
-                        >
-                            {evolutionData && renderEvolutionChain(evolutionData.chain)}
-                        </Modal> */}
                     </>
                 )}
             </div>

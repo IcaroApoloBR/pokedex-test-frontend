@@ -26,10 +26,10 @@ export default {
         'notebook': { 'min': '1024px', 'max': '1440px' },
       },
       backgroundImage: {
-        "hero-login":
-          "url('/hero-login.jpg')",
-        "pattern-home":
-          "url('/bbq-pattern.png')",
+        "backgroundLogin":
+          "url('/backgroundLogin.jpg')",
+        "backgroundSignUp":
+          "url('/backgroundSignUp.png')",
       },
       fontFamily: {
         sans: ["Poppins", "sans-serif"],
