@@ -95,7 +95,7 @@ export default function Home() {
 
     return (
         <section className="w-full h-full bg-whiteSecondary dark:bg-darkPrimary">
-            <div className="mt-20 p-6 h-full">
+            <div className="mt-20 p-6 min-h-screen">
                 <div className="w-full flex items-center justify-between flex-wrap gap-4">
                     <SearchBar onSearch={onSearchHandler} />
 
