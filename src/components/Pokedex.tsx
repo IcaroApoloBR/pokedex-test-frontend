@@ -1,41 +1,35 @@
 import { Link } from 'react-router-dom';
 import { LoadingScreen } from './LoadingScreen';
-import Pagination from './Pagination';
+// import Pagination from './Pagination';
 import PokemonCard from './PokemonCard';
-import { usePokemonContext } from '../context/PokemonContext';
+import { Pokemon } from '../types/Pokemon';
 
-interface PokedexProps {
-    pokemons: [];
-    isLoadingFetch: boolean;
-    totalPages: number;
-}
 
-const Pokedex = ({ pokemons, isLoadingFetch, totalPages }: PokedexProps) => {
-    const { page, setPage } = usePokemonContext();
+const Pokedex = ({ pokemons }: Pokemon) => {
 
-    const onLeftClickHandler = () => {
-        if (page > 0) {
-            setPage(page - 1);
-        }
-    };
+    // const onLeftClickHandler = () => {
+    //     if (page > 0) {
+    //         setPage(page - 1);
+    //     }
+    // };
 
-    const onRightClickHandler = () => {
-        if (page < totalPages - 1) {
-            setPage(page + 1);
-        }
-    };
+    // const onRightClickHandler = () => {
+    //     if (page < totalPages - 1) {
+    //         setPage(page + 1);
+    //     }
+    // };
 
     return (
         <section className="max-w-7xl mx-auto">
             <div className="flex flex-col items-center justify-center">
-                <Pagination
+                {/* <Pagination
                     page={page + 1}
                     totalPages={totalPages}
                     onLeftClick={onLeftClickHandler}
                     onRightClick={onRightClickHandler}
-                />
+                /> */}
 
-                {isLoadingFetch ? (
+                {1 == 2 ? (
                     <LoadingScreen>
                         <p className="text-gray-200 font-medium text-xl">
                             Wait, <span className="text-redSecondary font-semibold">listing</span> all pokemons ...

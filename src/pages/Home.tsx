@@ -1,112 +1,69 @@
 import { useEffect, useState } from "react";
-import ToggleDarkMode from "../components/FiltersBar/ToggleDarkMode";
+import { usePokemon } from "../context/PokemonContext";
+
+import { Pokemon } from "../types/Pokemon";
+
 import Pokedex from "../components/Pokedex";
 import SearchBar from "../components/FiltersBar/SearchBar";
 import TypeFilter from "../components/FiltersBar/TypeFilter";
-import SortDropdown from "../components/FiltersBar/SortDropdown";
+import SortOrder from "../components/FiltersBar/SortOrder";
+import ToggleDarkMode from "../components/FiltersBar/ToggleDarkMode";
 import { ErrorMessage } from "../components/ErrorMessage";
+import { LoadingScreen } from "../components/LoadingScreen";
 
-import { usePokemonContext } from '../context/PokemonContext';
 
 export default function Home() {
+    const { pokemons, fetchPokemons } = usePokemon();
 
-    const { pokemonsList, setPokemonsList, originalPokemonsList, page, totalPages, isLoadingFetch, setIsLoadingFetch, notFound, setNotFound, fetchPokemons, searchPokemons } = usePokemonContext();
-    const [errorMessage, setErrorMessage] = useState(null);
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [filterType, setFilterType] = useState<string>('');
+    const [sortOrder, setSortOrder] = useState<string>('');
 
     useEffect(() => {
-        fetchPokemons(50, 1);
+        fetchPokemons(1, 50);
     }, []);
 
-    const handleTypeSelect = (type: string) => {
-        setPokemonsList((prevPokemonsList) => {
-            if (!type) {
-                setErrorMessage(null);
-                return originalPokemonsList;
-            }
-
-            const filteredPokemons = originalPokemonsList.filter((pokemon) =>
-                pokemon.types.some((t) => t.type.name.includes(type))
-            );
-
-            if (filteredPokemons.length === 0) {
-                setErrorMessage("Sorry trainer, no Pokemon of the selected type found.");
-            } else {
-                setErrorMessage(null);
-            }
-
-
-            return filteredPokemons;
-        });
-    };
-
-    const sortPokemons = (order: 'asc' | 'desc') => {
-        setPokemonsList((prevPokemonsList) => {
-            const sortedPokemons = [...prevPokemonsList];
-
-            sortedPokemons.sort((a, b) => {
-                const orderA = a.name.toUpperCase();
-                const orderZ = b.name.toUpperCase();
-
-                return order === 'asc' ? orderA.localeCompare(orderZ) : orderZ.localeCompare(orderA);
-            });
-
-            return sortedPokemons;
-        });
-    };
-
-    const onSearchHandler = async (searchTerm: string) => {
-        try {
-            setIsLoadingFetch(true);
-            setNotFound(false);
-            setErrorMessage(null);
-
-            if (!searchTerm) {
-                await fetchPokemons(50, 1);
-            } else {
-
-                const foundPokemon = await searchPokemons(searchTerm);
-
-                console.log('foundPokemon:', foundPokemon);
-
-                if (foundPokemon) {
-                    setPokemonsList([foundPokemon]);
-                } else {
-                    setPokemonsList([]);
-                    setNotFound(true);
-                    setErrorMessage("Sorry trainer, no Pokemon found.");
-                }
-            }
-        } catch (error) {
-            console.error('onSearchHandler error:', error);
-            setNotFound(true);
-            setErrorMessage("Sorry, an error occurred during the search. Please try again.");
-        } finally {
-            setIsLoadingFetch(false);
+    const sortPokemons = (a: Pokemon, b: Pokemon): number => {
+        if (sortOrder === 'asc') {
+            return a.name.localeCompare(b.name);
+        } else if (sortOrder === 'desc') {
+            return b.name.localeCompare(a.name);
         }
+        return 0;
     };
+
+    const filteredAndSortedPokemons = pokemons.filter((pokemon) =>
+        pokemon.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        (filterType ? pokemon.type.includes(filterType) : true)
+    ).sort(sortPokemons);
+
+    const uniqueTypes = Array.from(
+        new Set(pokemons.flatMap((pokemon) => pokemon.type))
+    );
 
     return (
         <section className="w-full h-full bg-whiteSecondary dark:bg-darkPrimary">
             <div className="mt-20 p-6 min-h-screen">
-                <div className="w-full flex items-center justify-between flex-wrap gap-4">
-                    <SearchBar onSearch={onSearchHandler} />
+                <div className="w-full flex items-center justify-between flex-wrap gap-4 mb-4">
+                    <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
 
-                    <div className="flex items-start gap-4">
-                        <TypeFilter onSelectType={handleTypeSelect} />
-                        <SortDropdown onSortChange={sortPokemons} />
+                    <div className="flex flex-wrap items-start gap-4">
+                        <TypeFilter filterType={filterType} onFilterTypeChange={setFilterType} uniqueTypes={uniqueTypes} />
+                        <SortOrder sortOrder={sortOrder} onSortOrderChange={setSortOrder} />
                         <ToggleDarkMode />
                     </div>
                 </div>
 
-                {notFound || errorMessage ? (
-                    <ErrorMessage message={errorMessage} />
+                {filteredAndSortedPokemons.length === 0 && <ErrorMessage message="* Sorry, no pokemon found based on your recent search" />}
+
+                {pokemons.length !== 0 ? (
+                    <Pokedex pokemons={filteredAndSortedPokemons} />
                 ) : (
-                    <Pokedex
-                        pokemons={pokemonsList}
-                        isLoadingFetch={isLoadingFetch}
-                        page={page}
-                        totalPages={totalPages}
-                    />
+                    <LoadingScreen>
+                        <p className="text-gray-200 font-medium text-xl">
+                            Wait, <span className="text-redSecondary font-semibold">listing</span> all pokemons ...
+                        </p>
+                    </LoadingScreen>
                 )}
             </div>
         </section >

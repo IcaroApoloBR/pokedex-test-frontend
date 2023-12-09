@@ -6,7 +6,6 @@ import "react-toastify/dist/ReactToastify.css"
 import { PokemonProvider } from './context/PokemonContext';
 
 function App() {
-
   return (
     <BrowserRouter>
       <PokemonProvider>

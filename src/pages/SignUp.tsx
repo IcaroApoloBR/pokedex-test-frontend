@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from 'framer-motion';
@@ -7,7 +7,9 @@ import { Button } from "../components/Button";
 import { toast } from "react-toastify";
 import logo from '../assets/logo.png';
 import backgroundSignUp from '../assets/backgroundSignUp.png';
-import { SignUpDataProps, SignUpSchema } from "./types/FormSignUp.types";
+import { SignUpDataProps, SignUpSchema } from "../types/FormSignUp.types";
+import { auth, signUp } from "../services/api";
+import { useNavigate } from 'react-router-dom';
 
 export default function SignUp() {
     const [name, setName] = useState('')
@@ -16,7 +18,9 @@ export default function SignUp() {
     const [confirmPassword, setConfirmPassword] = useState('')
     const [isPasswordVisible, setIsPasswordVisible] = useState(false)
     const [isLoadingSignUp, setIsLoadingSignUp] = useState(false)
-    const [errorMessage, setErrorMessage] = useState('');
+
+    const navigate = useNavigate();
+    const [isRegistered, setIsRegistered] = useState<boolean>(false);
 
     const { register, handleSubmit, formState: { errors } } = useForm<SignUpDataProps>({
         resolver: zodResolver(SignUpSchema)
@@ -26,48 +30,47 @@ export default function SignUp() {
         setIsPasswordVisible(!isPasswordVisible)
     }
 
-    const signUp = async (data: SignUpDataProps) => {
+    const signUpUser = async (data: SignUpDataProps) => {
         setIsLoadingSignUp(true);
-        setErrorMessage("");
 
         if (data.password !== data.confirmPassword) {
-            toast.error('Passwords do not match')
+            toast.error("Sorry, the passwords don't match")
+            setIsLoadingSignUp(false);
             return
         }
 
         try {
-            const result = await signIn("credentials", {
-                name: data.name,
-                email: data.email,
-                password: data.password,
-                redirect: false,
-            });
+            const result = await signUp(data.email, data.password, data.name);
 
-            console.log(result)
-
-            if (result?.error) {
-                setErrorMessage("Incorrect email or password");
-                toast.error("Invalid credentials");
-            } else {
-                // router.push("/churras");
+            if (!result?.error) {
+                toast.success("User successfully registered");
+                await auth(data.email, data.password);
+                setIsRegistered(true);
             }
+
         } catch (error) {
-            console.error(error);
+            toast.error(error?.response.data.message);
         } finally {
             setIsLoadingSignUp(false);
         }
     };
 
+    useEffect(() => {
+        if (isRegistered) {
+            navigate('/');
+        }
+    }, [isRegistered, navigate]);
+
     return (
         <>
             <div className="grid md:grid-cols-2 sm:grid-cols-1 bg-darkPrimary">
-
                 <motion.div
                     initial={{ opacity: 0, scale: 0 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5 }}
+                    className="w-full bg-hero-login bg-no-repeat bg-left-bottom bg-cover brightness-50"
                 >
-                    <img src={backgroundSignUp} className="h-full brightness-50 object-cover" alt="Pokemon Background" />
+                    <img src={backgroundSignUp} className="hidden md:block h-full brightness-50 object-cover" alt="Pokemon Background" />
                 </motion.div>
 
                 <motion.div
@@ -82,10 +85,8 @@ export default function SignUp() {
                             <span className="font-semibold text-white text-lg">Pokemon Trainer Registration</span>
                         </div>
 
-                        {errorMessage && <p className="text-red-500 text-sm text-center mb-1">{errorMessage}</p>}
-
                         <form className="space-y-4"
-                            onSubmit={handleSubmit(signUp)}>
+                            onSubmit={handleSubmit(signUpUser)}>
                             <div className="relative">
                                 <div className="absolute top-3 pl-3 pointer-events-none">
                                     <Icon className="text-colorPrimary" icon="ic:twotone-alternate-email" width="24" />

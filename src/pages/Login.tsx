@@ -7,8 +7,11 @@ import { Button } from "../components/Button";
 import { toast } from "react-toastify";
 import logo from '../assets/logo.png';
 import backgroundLogin from '../assets/backgroundLogin.jpg';
-import { FormSignIn, SignInDataProps } from "./types/FormSignIn.types";
+import { FormSignIn, SignInDataProps } from "../types/FormSignIn.types";
 import { Link } from "react-router-dom";
+import { auth } from "../services/api";
+import { storageUserSave } from "../storage/storageUser";
+import { User } from "../types/User";
 
 export default function Login() {
     const [email, setEmail] = useState('')
@@ -30,19 +33,21 @@ export default function Login() {
         setErrorMessage("");
 
         try {
-            const result = await signIn("credentials", {
-                email: data.email,
-                password: data.password,
-                redirect: false,
-            });
+            const result = await auth(data.email, data.password);
 
-            console.log(result)
+            const authUser: User = {
+                token: result.data.token,
+                email: result.data.email,
+                id: result.data.id,
+                name: result.data.name,
+                created_at: result.data.created_at,
+            }
+
+            storageUserSave(authUser)
 
             if (result?.error) {
                 setErrorMessage("Incorrect email or password");
                 toast.error("Invalid credentials");
-            } else {
-                // router.push("/churras");
             }
         } catch (error) {
             console.error(error);
@@ -54,13 +59,13 @@ export default function Login() {
     return (
         <>
             <div className="grid md:grid-cols-2 sm:grid-cols-1 bg-darkPrimary">
-
                 <motion.div
                     initial={{ opacity: 0, scale: 0 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5 }}
+                    className="w-full bg-hero-login bg-no-repeat bg-left-bottom bg-cover brightness-50"
                 >
-                    <img src={backgroundLogin} className="h-full brightness-50 object-cover" alt="Pokemon Background" />
+                    <img src={backgroundLogin} className="hidden md:block h-full brightness-50 object-cover" alt="Pokemon Background" />
                 </motion.div>
 
                 <motion.div
@@ -119,9 +124,9 @@ export default function Login() {
                             </div>
 
                             <div className="flex items-center justify-start">
-                                <a href="/cadastrar" className="text-sm font-semibold text-colorPrimary hover:text-colorSecondary">
+                                <Link to="/cadastrar" className="text-sm font-semibold text-colorPrimary hover:text-colorSecondary">
                                     Not a pokemon trainer yet? Create an account
-                                </a>
+                                </Link>
                             </div>
 
                             <div className="flex justify-end">

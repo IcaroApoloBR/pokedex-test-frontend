@@ -1,12 +1,10 @@
-import { UserDTO } from '@dtos/UserDTO';
-
 const USER_STORAGE_KEY = 'user';
 
-export function storageUserSave(user: UserDTO) {
+export function storageUserSave(user) {
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
 }
 
-export function storageUserGet(): UserDTO | null {
+export function storageUserGet(): null {
     const storage = localStorage.getItem(USER_STORAGE_KEY);
 
     if (storage) {
