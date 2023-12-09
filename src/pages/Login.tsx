@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import logo from '../assets/logo.png';
 import backgroundLogin from '../assets/backgroundLogin.jpg';
 import { FormSignIn, SignInDataProps } from "../types/FormSignIn.types";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../services/api";
 import { storageUserSave } from "../storage/storageUser";
 import { User } from "../types/User";
@@ -18,7 +18,8 @@ export default function Login() {
     const [password, setPassword] = useState('')
     const [isPasswordVisible, setIsPasswordVisible] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
-    const [errorMessage, setErrorMessage] = useState('');
+
+    const navigate = useNavigate();
 
     const { register, handleSubmit, formState: { errors } } = useForm<SignInDataProps>({
         resolver: zodResolver(FormSignIn)
@@ -30,7 +31,6 @@ export default function Login() {
 
     const loginUser = async (data: SignInDataProps) => {
         setIsLoading(true);
-        setErrorMessage("");
 
         try {
             const result = await auth(data.email, data.password);
@@ -45,12 +45,16 @@ export default function Login() {
 
             storageUserSave(authUser)
 
+            navigate('/');
+
             if (result?.error) {
-                setErrorMessage("Incorrect email or password");
                 toast.error("Invalid credentials");
             }
         } catch (error) {
-            console.error(error);
+            console.log(error)
+            if (error.response.status === 400) {
+                toast.error("Invalid credentials, try again");
+            }
         } finally {
             setIsLoading(false);
         }
@@ -79,8 +83,6 @@ export default function Login() {
                             <img src={logo} width={200} height={200} alt="Pokedex Logo" />
                             <span className="font-semibold text-white text-lg">Login</span>
                         </div>
-
-                        {errorMessage && <p className="text-red-500 text-sm text-center mb-1">{errorMessage}</p>}
 
                         <form className="space-y-4"
                             onSubmit={handleSubmit(loginUser)}>

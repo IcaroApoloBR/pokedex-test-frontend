@@ -14,7 +14,12 @@ export function Router() {
 
     useEffect(() => {
         if (!isAuthenticated) {
-            navigate('/login');
+            const allowedPaths = ['/login', '/cadastrar'];
+            const currentPath = window.location.pathname;
+
+            if (!allowedPaths.includes(currentPath)) {
+                navigate('/login');
+            }
         }
     }, [isAuthenticated, navigate]);
 
