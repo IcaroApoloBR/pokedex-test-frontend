@@ -1,6 +1,8 @@
+import { User } from "../types/User";
+
 const USER_STORAGE_KEY = 'user';
 
-export function storageUserSave(user) {
+export function storageUserSave(user: User) {
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
 }
 

@@ -4,7 +4,7 @@ import Layout from './components/LayoutDefault/Layout';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
-import PokemonDetail from './pages/PokemonDetail';
+import Detail from './pages/Detail';
 import { storageUserGet } from './storage/storageUser';
 import Profile from './pages/Profile';
 
@@ -48,7 +48,7 @@ export function Router() {
                         path="/detail/:id"
                         element={
                             <Layout>
-                                <PokemonDetail />
+                                <Detail />
                             </Layout>
                         }
                     />

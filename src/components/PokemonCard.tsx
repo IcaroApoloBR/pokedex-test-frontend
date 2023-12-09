@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { PokemonTypeColor } from '../utils/PokemonTypeColor';
 import { Pokemon } from '../types/Pokemon';
 
-const PokemonCard = (pokemon: Pokemon, isCardDetail: boolean = false) => {
+const PokemonCard = (pokemon: Pokemon) => {
     const detailPokemon = pokemon.pokemon
 
     const stagger = 0.1;

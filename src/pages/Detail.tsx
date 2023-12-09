@@ -10,13 +10,17 @@ import PokemonCardDetail from '../components/PokemonCardDetail';
 function Detail() {
     const { id } = useParams<string>();
     const [pokemonDetails, setPokemonDetails] = useState<Pokemon | null>(null);
+    const [isLoading, setIsLoading] = useState(true)
 
     async function fetchPokemonDetails() {
+        setIsLoading(true)
         try {
             const details = await searchPokemon(id);
             setPokemonDetails(details);
         } catch (error) {
             console.error('Error fetching Pokemon details:', error);
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -37,7 +41,7 @@ function Detail() {
                     <ToggleDarkMode />
                 </div>
 
-                {pokemonDetails ? (
+                {pokemonDetails && !isLoading ? (
                     <PokemonCardDetail pokemon={pokemonDetails} />
                 ) : (
                     <LoadingScreen>
