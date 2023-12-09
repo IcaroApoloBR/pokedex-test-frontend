@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import PokemonDetail from './pages/PokemonDetail';
 import { storageUserGet } from './storage/storageUser';
+import Profile from './pages/Profile';
 
 export function Router() {
     const user = storageUserGet();
@@ -32,6 +33,14 @@ export function Router() {
                         element={
                             <Layout>
                                 <Home />
+                            </Layout>
+                        }
+                    />
+                    <Route
+                        path="/profile"
+                        element={
+                            <Layout>
+                                <Profile />
                             </Layout>
                         }
                     />
