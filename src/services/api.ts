@@ -120,7 +120,7 @@ export const addPokeTeam = async (name: string, id: string) => {
 export const getPokemons = async (
   limit: number = 50,
   offset: number = 0
-): Promise<Pokemon> => {
+): Promise<Pokemon[]> => {
   try {
     const url = `${URL_BASE_API}/pokemons/get/${limit}/${offset}`;
     const response = await axios.get(url);

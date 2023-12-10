@@ -35,12 +35,15 @@ export default function Login() {
         try {
             const result = await auth(data.email, data.password);
 
+            console.log(result)
+
             const authUser: User = {
                 token: result.data.token,
                 email: result.data.email,
                 id: result.data.id,
                 name: result.data.name,
                 created_at: result.data.created_at,
+                team: result.data.team
             }
 
             storageUserSave(authUser)

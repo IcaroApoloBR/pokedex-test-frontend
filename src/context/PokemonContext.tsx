@@ -19,7 +19,7 @@ export const PokemonProvider = ({ children }: PokemonProviderProps) => {
     const fetchPokemons = async (page: number, pageSize: number): Promise<void> => {
         try {
             const response = await getPokemons(pageSize, (page - 1) * pageSize);
-            setPokemons(response);
+            setPokemons(response as Pokemon[]);
         } catch (error) {
             console.log('error: ', error);
             throw error;

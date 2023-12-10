@@ -5,6 +5,25 @@ import { addPokeTeam } from '../services/api';
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { Link } from 'react-router-dom';
+import { User } from '../types/User';
+import { storageUserGet } from '../storage/storageUser';
+
+const user: User = storageUserGet() || {
+    token: "",
+    email: "",
+    id: "",
+    name: "",
+    created_at: "",
+    team: {
+        id: "",
+        name: "",
+        deleted_at: null,
+        created_at: "",
+        updated_at: "",
+        user_id: "",
+        pokemon: [] as Pokemon[],
+    }
+};
 
 const PokemonCard = ({ pokemon }: { pokemon: Pokemon }) => {
 
@@ -21,7 +40,6 @@ const PokemonCard = ({ pokemon }: { pokemon: Pokemon }) => {
 
     const pokemonType = detailPokemon.type[0];
     const TypeColorDynamic: string = PokemonTypeColor[pokemonType];
-
 
     const addPokemonToTeam = async () => {
         setIsLoading(true)
@@ -40,6 +58,10 @@ const PokemonCard = ({ pokemon }: { pokemon: Pokemon }) => {
             setIsLoading(false)
         }
     };
+
+    function isPokemonInTeam(pokemonName: string, pokemonList?: Pokemon[]): boolean {
+        return pokemonList?.some((p) => p.name === pokemonName) || false;
+    }
 
     return (
         <motion.div
@@ -71,17 +93,17 @@ const PokemonCard = ({ pokemon }: { pokemon: Pokemon }) => {
                     })}
                 </div>
 
-                <button type="button"
-                    onClick={() => { addPokemonToTeam() }}
-                    disabled={isLoading}
-                    className=""
+                <button
+                    type="button"
+                    onClick={() => addPokemonToTeam()}
+                    disabled={isPokemonInTeam(detailPokemon.name, user.team?.pokemon) || isLoading}
+                    className="text-gray-900 dark:text-gray-200 text-sm font-medium hover:text-colorPrimary"
                 >
-                    Add team
+                    {isPokemonInTeam(detailPokemon.name, user.team?.pokemon) ? "Already in team" : "Add team"}
                 </button>
 
-
                 <Link to={`/detail/${pokemon.id}`} key={pokemon.id}
-                className="text-gray-900 dark:text-gray-200 text-sm hover:text-colorPrimary hover:underline"
+                    className="text-gray-900 dark:text-gray-200 text-sm hover:text-colorPrimary hover:underline"
                 >
                     See details
                 </Link>

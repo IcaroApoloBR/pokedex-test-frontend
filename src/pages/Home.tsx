@@ -16,6 +16,7 @@ import { createTeam } from "../services/api";
 import { toast } from "react-toastify";
 import { storageUserGet } from "../storage/storageUser";
 import { User } from "../types/User";
+import { Link } from "react-router-dom";
 
 
 export default function Home() {
@@ -27,6 +28,15 @@ export default function Home() {
         id: "",
         name: "",
         created_at: "",
+        team: {
+            id: "",
+            name: "",
+            deleted_at: null,
+            created_at: "",
+            updated_at: "",
+            user_id: "",
+            pokemon: [] as Pokemon[],
+        }
     };
 
     const [searchTerm, setSearchTerm] = useState<string>('');
@@ -121,11 +131,17 @@ export default function Home() {
                             <ToggleDarkMode />
                         </div>
 
-                        <Button type="button"
-                            onClick={() => setOpenModalCreateTeam(true)}
-                        >
-                            Create team
-                        </Button>
+                        {user.team ?
+                            <Link to="/profile" className="text-gray-900 dark:text-gray-200 hover:scale-95">
+                                View team
+                            </Link>
+                            :
+                            <Button type="button"
+                                onClick={() => setOpenModalCreateTeam(true)}
+                            >
+                                Create team
+                            </Button>
+                        }
                     </div>
 
                     {filteredAndSortedPokemons.length === 0 && <ErrorMessage message="* Sorry, no pokemon found based on your recent search" />}

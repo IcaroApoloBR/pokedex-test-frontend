@@ -20,7 +20,7 @@ function Detail() {
         try {
             if (id) {
                 const details = await searchPokemon(id);
-                setPokemonDetails(details);
+                setPokemonDetails(details as Pokemon | null);
             }
         } catch (error) {
             console.error('Error fetching Pokemon details:', error);
