@@ -10,6 +10,10 @@ import SortOrder from "../components/FiltersBar/SortOrder";
 import ToggleDarkMode from "../components/FiltersBar/ToggleDarkMode";
 import { ErrorMessage } from "../components/ErrorMessage";
 import { LoadingScreen } from "../components/LoadingScreen";
+import { Modal } from "../components/Modal";
+import { Button } from "../components/Button";
+import { createTeam } from "../services/api";
+import { toast } from "react-toastify";
 
 
 export default function Home() {
@@ -19,17 +23,26 @@ export default function Home() {
     const [filterType, setFilterType] = useState<string>('');
     const [sortOrder, setSortOrder] = useState<string>('');
 
+    const [openModalCreateTeam, setOpenModalCreateTeam] = useState<boolean>(false);
+    const [nameTeam, setNameTeam] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [itemsPerPage, setItemsPerPage] = useState<number>(50);
+
+
+
     useEffect(() => {
-        fetchPokemons(1, 50);
-    }, []);
+        fetchPokemons(currentPage, itemsPerPage);
+    }, [currentPage, itemsPerPage]);
 
     const sortPokemons = (a: Pokemon, b: Pokemon): number => {
         if (sortOrder === 'asc') {
             return a.name.localeCompare(b.name);
         } else if (sortOrder === 'desc') {
             return b.name.localeCompare(a.name);
+        } else {
+            return a.id - b.id;
         }
-        return 0;
     };
 
     const filteredAndSortedPokemons: Pokemon[] = pokemons.filter((pokemon) =>
@@ -41,31 +54,83 @@ export default function Home() {
         new Set(pokemons.flatMap((pokemon) => pokemon.type))
     );
 
+    function handleCleanModal() {
+        setNameTeam('')
+        setOpenModalCreateTeam(false);
+    }
+
+    const createTeamPokemon = async (e: any) => {
+        e.preventDefault();
+
+        setIsLoading(true)
+
+        try {
+            const response = await createTeam(nameTeam)
+            toast.success("Team successfully created");
+        } catch (error) {
+            console.log('error: ', error);
+            toast.error("Erro ao criar time")
+            throw error;
+        } finally {
+            setOpenModalCreateTeam(false)
+            setIsLoading(false)
+        }
+    };
+
     return (
-        <section className="w-full h-full bg-whiteSecondary dark:bg-darkPrimary">
-            <div className="mt-20 p-6 min-h-screen">
-                <div className="w-full flex items-center justify-between flex-wrap gap-4 mb-4">
-                    <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+        <>
+            <Modal title="Create Team" open={openModalCreateTeam ? true : false} onClose={handleCleanModal}>
+                <form onSubmit={createTeamPokemon}>
+                    <div className="p-6 space-y-4">
+                        <div className="flex gap-4">
+                            <input type="text" placeholder="Team name" value={nameTeam} onChange={(e) => setNameTeam(e.target.value)} />
+                        </div>
 
-                    <div className="flex flex-wrap items-start gap-4">
-                        <TypeFilter filterType={filterType} onFilterTypeChange={setFilterType} uniqueTypes={uniqueTypes} />
-                        <SortOrder sortOrder={sortOrder} onSortOrderChange={setSortOrder} />
-                        <ToggleDarkMode />
+                        <div className="flex items-center justify-end p-4 space-x-6 rounded-b border-t border-gray-200 dark:border-gray-600">
+                            <button type="button" className="text-gray-900 dark:text-gray-200 hover:scale-95 hover:bg-opacity-70 transition-all" onClick={handleCleanModal}>Close</button>
+                            <Button type="submit">{isLoading ? "Creating" : "Create"}</Button>
+                        </div>
+
                     </div>
+                </form>
+            </Modal >
+
+            <section className="w-full h-full bg-whiteSecondary dark:bg-darkPrimary">
+                <div className="mt-20 p-6 min-h-screen max-w-7xl mx-auto">
+                    <div className="w-full flex items-center justify-between flex-wrap gap-4 mb-4">
+                        <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+
+                        <button type="button"
+                            onClick={() => setOpenModalCreateTeam(true)}>
+                            Create team
+                        </button>
+
+                        <div className="flex flex-wrap items-start gap-4">
+                            <TypeFilter filterType={filterType} onFilterTypeChange={setFilterType} uniqueTypes={uniqueTypes} />
+                            <SortOrder sortOrder={sortOrder} onSortOrderChange={setSortOrder} />
+                            <ToggleDarkMode />
+                        </div>
+                    </div>
+
+                    {filteredAndSortedPokemons.length === 0 && <ErrorMessage message="* Sorry, no pokemon found based on your recent search" />}
+
+                    {pokemons.length !== 0 ? (
+                        <Pokedex
+                            allPokemons={filteredAndSortedPokemons}
+                            currentPage={currentPage}
+                            setCurrentPage={setCurrentPage}
+                            itemsPerPage={itemsPerPage}
+                            setItemsPerPage={setItemsPerPage}
+                        />
+                    ) : (
+                        <LoadingScreen>
+                            <p className="text-gray-200 font-medium text-xl">
+                                Wait, <span className="text-redSecondary font-semibold">listing</span> all pokemons ...
+                            </p>
+                        </LoadingScreen>
+                    )}
                 </div>
-
-                {filteredAndSortedPokemons.length === 0 && <ErrorMessage message="* Sorry, no pokemon found based on your recent search" />}
-
-                {pokemons.length !== 0 ? (
-                    <Pokedex allPokemons={filteredAndSortedPokemons} />
-                ) : (
-                    <LoadingScreen>
-                        <p className="text-gray-200 font-medium text-xl">
-                            Wait, <span className="text-redSecondary font-semibold">listing</span> all pokemons ...
-                        </p>
-                    </LoadingScreen>
-                )}
-            </div>
-        </section >
+            </section >
+        </>
     )
 }

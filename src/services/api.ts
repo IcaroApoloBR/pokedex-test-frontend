@@ -1,8 +1,19 @@
 import axios from 'axios';
+import { storageUserGet } from '../storage/storageUser';
+import { User } from '../types/User';
 
-const BASE_URL = 'https://pokeapi.co/api/v2/pokemon';
+const BASE_URL = 'https://pokeapi.co/api/v2';
 const URL_BASE = "http://127.0.0.1:3000";
 
+const user: User = storageUserGet() || {
+  token: "",
+  email: "",
+  id: "",
+  name: "",
+  created_at: "",
+};
+
+const authToken = user.token
 export interface Pokemon {
   base_experience: number;
   height: number;
@@ -33,6 +44,17 @@ export interface PokemonDetails {
   abilities: number;
 }
 
+export interface PokemonEvolution {
+  species: {
+    name: string;
+  };
+  evolves_to: PokemonEvolution[];
+}
+
+export interface EvolutionChainResponse {
+  chain: PokemonEvolution;
+}
+
 export const signUp = async (email: string, password: string, name: string) => {
   try {
     const response = await axios.post(`${URL_BASE}/signUp`, {
@@ -60,6 +82,41 @@ export const auth = async (email: string, password: string) => {
   }
 };
 
+export const createTeam = async (name: string) => {
+  try {
+    const response = await axios.post(`${URL_BASE}/teams/create`, {
+      name: name,
+    },
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+    return response.data;
+  } catch (error) {
+    console.log('error: ', error);
+    throw error;
+  }
+};
+
+export const addPokeTeam = async (name: string, id: string) => {
+  try {
+    const response = await axios.post(`${URL_BASE}/teams/add-pokemon`, {
+      name: name,
+      url: id,
+    },
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+    return response.data;
+  } catch (error) {
+    console.log('error: ', error);
+    throw error;
+  }
+};
+
 export const getPokemons = async (
   limit: number = 50,
   offset: number = 0
@@ -74,8 +131,6 @@ export const getPokemons = async (
   }
 };
 
-
-
 export const searchPokemon = async (id: string): Promise<Pokemon> => {
   try {
     const url = `${URL_BASE}/pokemons/search/${id}`;
@@ -87,26 +142,31 @@ export const searchPokemon = async (id: string): Promise<Pokemon> => {
   }
 };
 
-
-
-export const getPokemonData = async (url: string): Promise<any> => {
+export const getPokemonEvolutionChain = async (pokemonId: string): Promise<string[]> => {
   try {
-    const response = await axios.get(url);
-    return response.data;
-  } catch (error) {
-    console.error('error: ', error);
-    throw error;
-  }
-};
+    const response = await axios.get(`${BASE_URL}/pokemon-species/${pokemonId}/`);
+    const evolutionChainUrl = response.data.evolution_chain.url;
+    const evolutionChainResponse = await axios.get<EvolutionChainResponse>(evolutionChainUrl);
 
-export const getPokemonDetails = async (
-  id: number
-): Promise<Pokemon> => {
-  try {
-    const url = `${BASE_URL}/${id}`;
-    const response = await axios.get(url);
-    console.log(response)
-    return response.data;
+    const listEvolutionNames = (chain: PokemonEvolution): string[] => {
+      const evolutionNames: string[] = [];
+
+      const traverseChain = (evolution: PokemonEvolution) => {
+        evolutionNames.push(evolution.species.name);
+
+        if (evolution.evolves_to && evolution.evolves_to.length > 0) {
+          evolution.evolves_to.forEach(traverseChain);
+        }
+      };
+
+      traverseChain(chain);
+
+      return evolutionNames;
+    };
+
+    const evolutionNames = listEvolutionNames(evolutionChainResponse.data.chain);
+        
+    return evolutionNames;
   } catch (error) {
     console.error('error: ', error);
     throw error;

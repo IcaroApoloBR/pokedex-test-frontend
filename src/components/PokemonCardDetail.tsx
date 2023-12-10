@@ -1,9 +1,13 @@
 import { motion } from 'framer-motion';
 import { PokemonTypeColor } from '../utils/PokemonTypeColor';
 import { Pokemon } from '../types/Pokemon';
+import { getPokemonEvolutionChain } from '../services/api';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const PokemonCardDetail = (pokemon: Pokemon) => {
     const detailPokemon = pokemon.pokemon
+    const [pokemonEvolution, setPokemonEvolution] = useState<string[]>([])
 
     const stagger = 0.1;
 
@@ -14,6 +18,20 @@ const PokemonCardDetail = (pokemon: Pokemon) => {
 
     const pokemonType = detailPokemon.type[0];
     const TypeColorDynamic: typeof PokemonTypeColor = PokemonTypeColor[pokemonType] || 'unknown';
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const evolution = await getPokemonEvolutionChain(detailPokemon.id);
+                setPokemonEvolution(evolution);
+            } catch (error) {
+                console.error('Erro ao buscar dados de evolução:');
+            }
+        };
+
+        fetchData();
+    }, [detailPokemon.id]);
+
 
     return (
         <motion.div
@@ -26,7 +44,7 @@ const PokemonCardDetail = (pokemon: Pokemon) => {
                 duration: 0.5,
             }}
             viewport={{ amount: 0 }}
-            className={`w-auto p-4 rounded-2xl text-lg border-2 ${TypeColorDynamic} bg-whitePrimary dark:bg-darkSecondary shadow-md bg-opacity-40 text-gray-900 dark:text-gray-200 duration-500 hover:scale-95`}>
+            className={`w-auto p-4 rounded-2xl text-lg border-2 ${TypeColorDynamic} bg-whitePrimary dark:bg-darkSecondary shadow-md bg-opacity-40 text-gray-900 dark:text-gray-200 duration-500`}>
             <div className="relative h-full flex flex-col items-center justify-center gap-2">
                 <img alt={detailPokemon.name} src={detailPokemon.img} className="object-cover w-16" />
 
@@ -45,13 +63,24 @@ const PokemonCardDetail = (pokemon: Pokemon) => {
                     })}
                 </div>
 
-                <div className="text-gray-900 dark:text-gray-200 text-sm">
-                    <h2 className="font-bold">Abilities</h2>
-                    {detailPokemon.abilities.map((ability, index) => (
-                        <div key={index}>
-                            <span>{ability}</span>
-                        </div>
-                    ))}
+                <div className="flex items-start justify-between w-full">
+                    <div className="text-gray-900 dark:text-gray-200 text-sm">
+                        <h2 className="font-bold">Abilities</h2>
+                        {detailPokemon.abilities.map((ability, index) => (
+                            <div key={index}>
+                                <span>{ability}</span>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="text-gray-900 dark:text-gray-200 text-sm">
+                        <h2 className="font-bold">Evolutions</h2>
+                        {pokemonEvolution.map((name, index) => (
+                            <Link to={`/detail/${name}`} key={index} className="flex hover:underline hover:scale-95 hover:text-colorPrimary" title="Ver evolução">
+                                <span>{name}</span>
+                            </Link>
+                        ))}
+                    </div>
                 </div>
 
                 <div className="flex flex-col justify-center gap-1 text-gray-900 dark:text-gray-200 text-sm">

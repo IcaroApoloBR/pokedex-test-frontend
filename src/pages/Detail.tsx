@@ -30,7 +30,7 @@ function Detail() {
 
     return (
         <>
-            <section className="w-full h-screen bg-whiteSecondary dark:bg-darkPrimary flex flex-col items-center justify-between gap-8">
+            <section className="w-full h-screen bg-whiteSecondary dark:bg-darkPrimary flex flex-col items-center  gap-8">
                 <div className='w-full mt-20 p-4 flex items-center justify-between'>
                     <Button type="button">
                         <Link to="/">

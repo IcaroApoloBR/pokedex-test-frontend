@@ -1,8 +1,15 @@
 import { motion } from 'framer-motion';
 import { PokemonTypeColor } from '../utils/PokemonTypeColor';
 import { Pokemon } from '../types/Pokemon';
+import { addPokeTeam } from '../services/api';
+import { toast } from "react-toastify";
+import { useState } from "react";
+import { Link } from 'react-router-dom';
 
 const PokemonCard = ({ pokemon }: Pokemon) => {
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
     const detailPokemon = pokemon
 
     const stagger = 0.1;
@@ -15,6 +22,25 @@ const PokemonCard = ({ pokemon }: Pokemon) => {
     const pokemonType = detailPokemon.type[0];
     const TypeColorDynamic: string = PokemonTypeColor[pokemonType];
 
+
+    const addPokemonToTeam = async () => {
+        setIsLoading(true)
+
+        try {
+            await addPokeTeam(
+                detailPokemon.name,
+                String(detailPokemon.id)
+            )
+
+            toast.success("Pokemon add to team");
+        } catch (error) {
+            console.log('error: ', error);
+            toast.error("Erro ao adicionar pokemon time")
+        } finally {
+            setIsLoading(false)
+        }
+    };
+
     return (
         <motion.div
             variants={variants}
@@ -26,7 +52,7 @@ const PokemonCard = ({ pokemon }: Pokemon) => {
                 duration: 0.5,
             }}
             viewport={{ amount: 0 }}
-            className={`w-48 h-48 rounded-2xl text-lg border-2 ${TypeColorDynamic} bg-whitePrimary dark:bg-darkSecondary shadow-md bg-opacity-40 text-gray-900 dark:text-gray-200 duration-500 hover:scale-95`}>
+            className={`w-64 h-64 rounded-2xl text-lg border-2 ${TypeColorDynamic} bg-whitePrimary dark:bg-darkSecondary shadow-md bg-opacity-40 text-gray-900 dark:text-gray-200 duration-500 hover:scale-95`}>
             <div className="relative h-full flex flex-col items-center justify-center gap-2">
                 <img alt={detailPokemon.name} src={detailPokemon.img} className="object-cover w-16" />
 
@@ -44,6 +70,19 @@ const PokemonCard = ({ pokemon }: Pokemon) => {
                         )
                     })}
                 </div>
+
+                <button type="button"
+                    onClick={() => { addPokemonToTeam() }}
+                    disabled={isLoading}
+                    className=""
+                >
+                    Add team
+                </button>
+
+
+                <Link to={`/detail/${pokemon.id}`} key={pokemon.id}>
+                    See details
+                </Link>
             </div>
         </motion.div>
     )
