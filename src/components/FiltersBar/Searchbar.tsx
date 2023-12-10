@@ -16,7 +16,7 @@ const SearchBar = ({ searchTerm, onSearchChange }: SearchBarProps) => {
 
             <input
                 type="text"
-                placeholder="Search by name or type"
+                placeholder="Search by name"
                 value={searchTerm}
                 onChange={(e) => onSearchChange(e.target.value)}
                 className="bg-whitePrimary dark:bg-darkSecondary rounded-lg border-2 shadow-sm shadow-colorSecondary border-colorSecondary p-3 text-sm text-gray-900 dark:text-gray-200 focus:border-colorPrimary outline-colorPrimary font-medium"

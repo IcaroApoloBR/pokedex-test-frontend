@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { getPokemons } from '../services/api';
 import { Pokemon } from '../types/Pokemon';
 
@@ -7,9 +7,13 @@ interface PokemonContextProps {
     fetchPokemons: (page: number, pageSize: number) => Promise<void>;
 }
 
+interface PokemonProviderProps {
+    children: ReactNode;
+}
+
 const PokemonContext = createContext<PokemonContextProps | undefined>(undefined);
 
-export const PokemonProvider = ({ children }) => {
+export const PokemonProvider = ({ children }: PokemonProviderProps) => {
     const [pokemons, setPokemons] = useState<Pokemon[]>([]);
 
     const fetchPokemons = async (page: number, pageSize: number): Promise<void> => {
