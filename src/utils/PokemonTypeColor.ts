@@ -1,4 +1,8 @@
-export const PokemonTypeColor = {
+type PokemonTypeColorDynamic = {
+    [key: string]: string;
+};
+
+export const PokemonTypeColor: PokemonTypeColorDynamic = {
     normal: 'shadow-[#A8A878] border-[#A8A878] text-[#A8A878]',
     fighting: 'shadow-[#C03028] border-[#C03028] text-[#C03028]',
     flying: 'shadow-[#A890F0] border-[#A890F0] text-[#A890F0]',

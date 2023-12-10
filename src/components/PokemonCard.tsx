@@ -2,8 +2,8 @@ import { motion } from 'framer-motion';
 import { PokemonTypeColor } from '../utils/PokemonTypeColor';
 import { Pokemon } from '../types/Pokemon';
 
-const PokemonCard = (pokemon: Pokemon) => {
-    const detailPokemon = pokemon.pokemon
+const PokemonCard = ({ pokemon }: Pokemon) => {
+    const detailPokemon = pokemon
 
     const stagger = 0.1;
 
@@ -13,7 +13,7 @@ const PokemonCard = (pokemon: Pokemon) => {
     };
 
     const pokemonType = detailPokemon.type[0];
-    const TypeColorDynamic = PokemonTypeColor[pokemonType] || 'unknown';
+    const TypeColorDynamic: string = PokemonTypeColor[pokemonType];
 
     return (
         <motion.div
@@ -36,7 +36,7 @@ const PokemonCard = (pokemon: Pokemon) => {
                 </div>
                 <div className=" text-sm flex gap-1 text-gray-900 dark:text-gray-200">
                     <span className={`${TypeColorDynamic}`}>Types:</span>
-                    {detailPokemon.type.map((type, index) => {
+                    {detailPokemon.type.map((type: string, index: number) => {
                         return (
                             <div key={index}>
                                 {type}

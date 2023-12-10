@@ -5,7 +5,7 @@ import PokemonCard from './PokemonCard';
 import { Pokemon } from '../types/Pokemon';
 
 
-const Pokedex = ({ pokemons }: Pokemon) => {
+const Pokedex = ({ allPokemons }: Pokemon) => {
 
     // const onLeftClickHandler = () => {
     //     if (page > 0) {
@@ -32,15 +32,15 @@ const Pokedex = ({ pokemons }: Pokemon) => {
                 {1 == 2 ? (
                     <LoadingScreen>
                         <p className="text-gray-200 font-medium text-xl">
-                            Wait, <span className="text-redSecondary font-semibold">listing</span> all pokemons ...
+                            Wait, <span className="text-redSecondary font-semibold">listing</span> all Pokemons ...
                         </p>
                     </LoadingScreen>
                 ) : (
                     <>
                         <div className="flex flex-wrap gap-6 justify-center items-center">
-                            {pokemons && pokemons.map((pokemon, index) => (
-                                <Link to={`/detail/${pokemon.id}`} key={index}>
-                                    <PokemonCard key={index} pokemon={pokemon} />
+                            {allPokemons && Array.isArray(allPokemons) && allPokemons.map((pokemon: Pokemon) => (
+                                <Link to={`/detail/${pokemon.id}`} key={pokemon.id}>
+                                    <PokemonCard pokemon={pokemon} />
                                 </Link>
                             ))}
                         </div>

@@ -32,7 +32,7 @@ export default function Home() {
         return 0;
     };
 
-    const filteredAndSortedPokemons = pokemons.filter((pokemon) =>
+    const filteredAndSortedPokemons: Pokemon[] = pokemons.filter((pokemon) =>
         pokemon.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
         (filterType ? pokemon.type.includes(filterType) : true)
     ).sort(sortPokemons);
@@ -57,7 +57,7 @@ export default function Home() {
                 {filteredAndSortedPokemons.length === 0 && <ErrorMessage message="* Sorry, no pokemon found based on your recent search" />}
 
                 {pokemons.length !== 0 ? (
-                    <Pokedex pokemons={filteredAndSortedPokemons} />
+                    <Pokedex allPokemons={filteredAndSortedPokemons} />
                 ) : (
                     <LoadingScreen>
                         <p className="text-gray-200 font-medium text-xl">
