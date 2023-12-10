@@ -14,10 +14,20 @@ import { Modal } from "../components/Modal";
 import { Button } from "../components/Button";
 import { createTeam } from "../services/api";
 import { toast } from "react-toastify";
+import { storageUserGet } from "../storage/storageUser";
+import { User } from "../types/User";
 
 
 export default function Home() {
     const { pokemons, fetchPokemons } = usePokemon();
+
+    const user: User = storageUserGet() || {
+        token: "",
+        email: "",
+        id: "",
+        name: "",
+        created_at: "",
+    };
 
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [filterType, setFilterType] = useState<string>('');

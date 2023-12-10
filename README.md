@@ -35,10 +35,13 @@ Execute os seguintes comandos para configurar o Frontend.
 
 ### Vídeo e testes do Projeto
 <div align="center">
-<img src="github/project.gif" alt="Login" width="800" height="400">
+<img src="github/system.gif" alt="Login" width="800" height="400">
 </div>
 <div align="center">
-<img src="github/tests.png" alt="Login" width="250" height="100">
+<img src="github/auth.gif" alt="Login" width="800" height="400">
+</div>
+<div align="center">
+<img src="github/responsive.gif" alt="Login" width="800" height="400">
 </div>
 
 ### Detalhes dos Requisitos para avaliação

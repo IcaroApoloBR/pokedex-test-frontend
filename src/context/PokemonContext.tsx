@@ -21,7 +21,7 @@ export const PokemonProvider = ({ children }: PokemonProviderProps) => {
             const response = await getPokemons(pageSize, (page - 1) * pageSize);
             setPokemons(response);
         } catch (error) {
-            console.log('Error when searching for Pokémon');
+            console.log('error: ', error);
             throw error;
         }
     };

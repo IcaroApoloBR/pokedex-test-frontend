@@ -137,7 +137,6 @@ export default function SignUp() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     className="text-sm border focus:ring-colorPrimary outline-none border-colorSecondary focus:border-colorPrimary pl-10 p-3 w-full  bg-darkSecondary placeholder-gray-400 text-gray-200 rounded-md focus:z-10 sm:text-sm"
                                     placeholder="Password"
-                                    required
                                 />
                                 {errors.password && <span className="text-red-500 text-sm">{errors.password.message}</span>}
                             </div>
