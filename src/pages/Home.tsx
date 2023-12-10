@@ -27,13 +27,7 @@ export default function Home() {
     const [nameTeam, setNameTeam] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [itemsPerPage, setItemsPerPage] = useState<number>(50);
-
-
-
-    useEffect(() => {
-        fetchPokemons(currentPage, itemsPerPage);
-    }, [currentPage, itemsPerPage]);
+    const [itemsPerPage, setItemsPerPage] = useState<number>(25);
 
     const sortPokemons = (a: Pokemon, b: Pokemon): number => {
         if (sortOrder === 'asc') {
@@ -59,31 +53,42 @@ export default function Home() {
         setOpenModalCreateTeam(false);
     }
 
-    const createTeamPokemon = async (e: any) => {
+    const createTeamPokemon = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         setIsLoading(true)
 
         try {
-            const response = await createTeam(nameTeam)
+            await createTeam(nameTeam)
             toast.success("Team successfully created");
+
         } catch (error) {
             console.log('error: ', error);
-            toast.error("Erro ao criar time")
-            throw error;
+            toast.error("Error creating team")
+
         } finally {
             setOpenModalCreateTeam(false)
             setIsLoading(false)
         }
     };
 
+    useEffect(() => {
+        fetchPokemons(currentPage, itemsPerPage);
+    }, [currentPage, itemsPerPage]);
+
     return (
         <>
-            <Modal title="Create Team" open={openModalCreateTeam ? true : false} onClose={handleCleanModal}>
+            <Modal title="Create Pokemon Team" open={openModalCreateTeam ? true : false} onClose={handleCleanModal}>
                 <form onSubmit={createTeamPokemon}>
                     <div className="p-6 space-y-4">
-                        <div className="flex gap-4">
-                            <input type="text" placeholder="Team name" value={nameTeam} onChange={(e) => setNameTeam(e.target.value)} />
+                        <div className="flex flex-col gap-4">
+                            <input type="text" placeholder="Team name" value={nameTeam}
+                                onChange={(e) => setNameTeam(e.target.value)}
+                                className="bg-whitePrimary dark:bg-darkSecondary rounded-lg border-2 shadow-sm shadow-colorSecondary border-colorSecondary p-3 text-sm text-gray-900 dark:text-gray-200 focus:border-colorPrimary outline-colorPrimary font-medium"
+                            />
+                            <span className="text-gray-900 dark:text-gray-200 text-xs font-medium">
+                                * Only when creating a team, you can add up to a maximum of 5 Pokemons assigned to it
+                            </span>
                         </div>
 
                         <div className="flex items-center justify-end p-4 space-x-6 rounded-b border-t border-gray-200 dark:border-gray-600">
@@ -100,16 +105,17 @@ export default function Home() {
                     <div className="w-full flex items-center justify-between flex-wrap gap-4 mb-4">
                         <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
 
-                        <button type="button"
-                            onClick={() => setOpenModalCreateTeam(true)}>
-                            Create team
-                        </button>
-
                         <div className="flex flex-wrap items-start gap-4">
                             <TypeFilter filterType={filterType} onFilterTypeChange={setFilterType} uniqueTypes={uniqueTypes} />
                             <SortOrder sortOrder={sortOrder} onSortOrderChange={setSortOrder} />
                             <ToggleDarkMode />
                         </div>
+
+                        <Button type="button"
+                            onClick={() => setOpenModalCreateTeam(true)}
+                        >
+                            Create team
+                        </Button>
                     </div>
 
                     {filteredAndSortedPokemons.length === 0 && <ErrorMessage message="* Sorry, no pokemon found based on your recent search" />}

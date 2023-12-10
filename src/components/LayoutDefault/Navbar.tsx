@@ -1,13 +1,22 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import menu from '../../assets/menu.svg';
 import close from '../../assets/close.svg';
 import logo from '../../assets/logo.png';
+import { storageUserRemove } from '../../storage/storageUser';
 
 const Navbar = () => {
   const [active, setActive] = useState("home");
   const [toggle, setToggle] = useState(false);
   const [navColor, setNavColor] = useState("bg-colorPrimary")
+
+  const navigate = useNavigate();
+
+  const handleLogoutUser = () => {
+    storageUserRemove();
+
+    navigate('/login');
+  }
 
   const listenScrollEvent = () => {
     window.scrollY > 10 ? setNavColor("bg-colorPrimary shadow-md shadow-colorSecondary duration-700") : setNavColor("bg-colorPrimary");
@@ -33,6 +42,10 @@ const Navbar = () => {
           <li className={`${active === "profile" ? "text-yellowPrimary dark:text-darkPrimary" : "text-whiteSecondary dark:text-darkSecondary"} hover:text-yellowSecondary  transition-colors font-semibold cursor-pointer`} onClick={() => setActive("profile")}>
             <Link to="/profile">Profile</Link>
           </li>
+          <Link to="#" onClick={handleLogoutUser}
+            className="text-whiteSecondary hover:text-yellowSecondary dark:text-darkSecondary dark:hover:text-darkPrimary font-semibold cursor-pointer">
+            Logout
+          </Link>
         </ul>
 
         <div className="sm:hidden flex flex-1 justify-end items-center">
@@ -40,13 +53,19 @@ const Navbar = () => {
 
           <div className={`${!toggle ? 'hidden' : 'flex'} p-6 dark:bg-darkPrimary bg-whiteSecondary border border-yellowSecondary absolute top-14 right-0 mx-4 my-2 min-w-[140px] flex justify-center z-50 rounded-xl`}>
             <ul className="list-none flex flex-col justify-end items-start gap-4">
-              <li className={`${active === "home" ? "text-yellowPrimary dark:text-whitePrimary" : "text-yellowSecondary dark:text-whiteSecondary"} hover:text-yellowSecondary  transition-colors font-semibold cursor-pointer`} onClick={() => { setToggle(!toggle); setActive("home") }}>
+              <li className={`${active === "home" ? "text-yellowPrimary dark:text-whitePrimary" : "text-yellowSecondary dark:text-darkSecondary"} hover:text-yellowSecondary  transition-colors font-semibold cursor-pointer`} onClick={() => { setToggle(!toggle); setActive("home") }}>
                 <Link to="/">Home</Link>
               </li>
-              <li className={`${active === "profile" ? "text-yellowPrimary dark:text-whitePrimary" : "text-yellowSecondary dark:text-whiteSecondary"} hover:text-yellowSecondary  transition-colors font-semibold cursor-pointer`} onClick={() => { setToggle(!toggle); setActive("profile") }}>
+              <li className={`${active === "profile" ? "text-yellowPrimary dark:text-whitePrimary" : "text-yellowSecondary dark:text-darkSecondary"} hover:text-yellowSecondary  transition-colors font-semibold cursor-pointer`} onClick={() => { setToggle(!toggle); setActive("profile") }}>
                 <Link to="/profile">Profile</Link>
               </li>
+              
+              <Link to="#" onClick={handleLogoutUser}
+                className="text-whiteSecondary hover:text-yellowSecondary dark:text-darkSecondary dark:hover:text-darkPrimary font-semibold cursor-pointer">
+                Logout
+              </Link>
             </ul>
+
           </div>
         </div>
       </div>

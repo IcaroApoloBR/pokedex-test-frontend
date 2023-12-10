@@ -21,7 +21,7 @@ export const PokemonProvider = ({ children }: PokemonProviderProps) => {
             const response = await getPokemons(pageSize, (page - 1) * pageSize);
             setPokemons(response);
         } catch (error) {
-            console.error('Erro ao buscar Pokémon:', error);
+            console.log('Error when searching for Pokémon');
             throw error;
         }
     };
@@ -40,7 +40,7 @@ export const PokemonProvider = ({ children }: PokemonProviderProps) => {
 export const usePokemon = (): PokemonContextProps => {
     const context = useContext(PokemonContext);
     if (!context) {
-        throw new Error('usePokemon deve ser usado dentro de um PokemonProvider');
+        throw new Error('usePokemon must be used within a PokemonProvider');
     }
     return context;
 };

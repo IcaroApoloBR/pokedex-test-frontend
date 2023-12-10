@@ -14,7 +14,7 @@ export const Button = ({ type, onClick, children, disabled }: ButtonProps) => {
                 type={type}
                 onClick={onClick}
                 disabled={disabled}
-                className={`${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} relative px-5 py-2.5 bg-colorPrimary hover:bg-colorSecondary text-white text-lg font-bold rounded-2xl shadow-lg hover:scale-95 transition-all`}>
+                className={`${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} relative px-3 py-1.5 bg-colorPrimary hover:bg-colorSecondary text-white text-base font-bold rounded-2xl shadow-lg hover:scale-95 transition-all`}>
                 {children}
             </button>
         </>

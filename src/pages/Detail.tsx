@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+
 import { searchPokemon } from '../services/api';
+
+import { Pokemon } from '../types/Pokemon';
+
 import { LoadingScreen } from '../components/LoadingScreen';
 import { Button } from '../components/Button';
 import ToggleDarkMode from '../components/FiltersBar/ToggleDarkMode';
-import { Pokemon } from '../types/Pokemon';
 import PokemonCardDetail from '../components/PokemonCardDetail';
 
 function Detail() {
@@ -13,16 +16,19 @@ function Detail() {
     const [isLoading, setIsLoading] = useState(true)
 
     async function fetchPokemonDetails() {
-        setIsLoading(true)
+        setIsLoading(true);
         try {
-            const details = await searchPokemon(id);
-            setPokemonDetails(details);
+            if (id) {
+                const details = await searchPokemon(id);
+                setPokemonDetails(details);
+            }
         } catch (error) {
             console.error('Error fetching Pokemon details:', error);
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
     }
+
 
     useEffect(() => {
         fetchPokemonDetails();

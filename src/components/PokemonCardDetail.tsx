@@ -1,49 +1,33 @@
-import { motion } from 'framer-motion';
-import { PokemonTypeColor } from '../utils/PokemonTypeColor';
-import { Pokemon } from '../types/Pokemon';
-import { getPokemonEvolutionChain } from '../services/api';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const PokemonCardDetail = (pokemon: Pokemon) => {
-    const detailPokemon = pokemon.pokemon
+import { getPokemonEvolutionChain } from '../services/api';
+
+import { PokemonTypeColor } from '../utils/PokemonTypeColor';
+
+import { Pokemon } from '../types/Pokemon';
+
+const PokemonCardDetail = ({ pokemon }: { pokemon: Pokemon }) => {
+    const detailPokemon = pokemon;
     const [pokemonEvolution, setPokemonEvolution] = useState<string[]>([])
-
-    const stagger = 0.1;
-
-    const variants = {
-        hidden: { opacity: 0 },
-        visible: { opacity: 1 },
-    };
-
     const pokemonType = detailPokemon.type[0];
-    const TypeColorDynamic: typeof PokemonTypeColor = PokemonTypeColor[pokemonType] || 'unknown';
+    const TypeColorDynamic: string = PokemonTypeColor[pokemonType];
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const evolution = await getPokemonEvolutionChain(detailPokemon.id);
+                const evolution = await getPokemonEvolutionChain(String(detailPokemon.id));
                 setPokemonEvolution(evolution);
             } catch (error) {
-                console.error('Erro ao buscar dados de evolução:');
+                console.log('error: ', error);
             }
         };
 
         fetchData();
     }, [detailPokemon.id]);
 
-
     return (
-        <motion.div
-            variants={variants}
-            initial="hidden"
-            animate="visible"
-            transition={{
-                delay: detailPokemon.id * stagger,
-                ease: "easeInOut",
-                duration: 0.5,
-            }}
-            viewport={{ amount: 0 }}
+        <div
             className={`w-auto p-4 rounded-2xl text-lg border-2 ${TypeColorDynamic} bg-whitePrimary dark:bg-darkSecondary shadow-md bg-opacity-40 text-gray-900 dark:text-gray-200 duration-500`}>
             <div className="relative h-full flex flex-col items-center justify-center gap-2">
                 <img alt={detailPokemon.name} src={detailPokemon.img} className="object-cover w-16" />
@@ -114,7 +98,7 @@ const PokemonCardDetail = (pokemon: Pokemon) => {
                     </div>
                 </div>
             </div>
-        </motion.div >
+        </div >
     )
 }
 

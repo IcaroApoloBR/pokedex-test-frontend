@@ -49,7 +49,8 @@ export default function SignUp() {
             }
 
         } catch (error) {
-            toast.error(error?.response.data.message);
+            console.log('error: ', error);
+            toast.error("There was some error, try again");
         } finally {
             setIsLoadingSignUp(false);
         }

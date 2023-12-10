@@ -17,7 +17,7 @@ export default function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [isPasswordVisible, setIsPasswordVisible] = useState(false)
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoadingLogin, setIsLoadingLogin] = useState(false)
 
     const navigate = useNavigate();
 
@@ -30,7 +30,7 @@ export default function Login() {
     }
 
     const loginUser = async (data: SignInDataProps) => {
-        setIsLoading(true);
+        setIsLoadingLogin(true);
 
         try {
             const result = await auth(data.email, data.password);
@@ -51,12 +51,10 @@ export default function Login() {
                 toast.error("Invalid credentials");
             }
         } catch (error) {
-            console.log(error)
-            if (error.response.status === 400) {
-                toast.error("Invalid credentials, try again");
-            }
+            console.log('error: ', error);
+            toast.error("There was some error, try again");
         } finally {
-            setIsLoading(false);
+            setIsLoadingLogin(false);
         }
     };
 
@@ -135,7 +133,7 @@ export default function Login() {
                                 <Button
                                     type="submit"
                                     disabled={!email && !password}>
-                                    {isLoading ? "Signing in..." : "Sign in"}
+                                    {isLoadingLogin ? "Signing in..." : "Sign in"}
                                 </Button>
                             </div>
                         </form>

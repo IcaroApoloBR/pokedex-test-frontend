@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import { Link } from 'react-router-dom';
 
-const PokemonCard = ({ pokemon }: Pokemon) => {
+const PokemonCard = ({ pokemon }: { pokemon: Pokemon }) => {
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -35,7 +35,7 @@ const PokemonCard = ({ pokemon }: Pokemon) => {
             toast.success("Pokemon add to team");
         } catch (error) {
             console.log('error: ', error);
-            toast.error("Erro ao adicionar pokemon time")
+            toast.error("Error adding pokemon team")
         } finally {
             setIsLoading(false)
         }
@@ -80,7 +80,9 @@ const PokemonCard = ({ pokemon }: Pokemon) => {
                 </button>
 
 
-                <Link to={`/detail/${pokemon.id}`} key={pokemon.id}>
+                <Link to={`/detail/${pokemon.id}`} key={pokemon.id}
+                className="text-gray-900 dark:text-gray-200 text-sm hover:text-colorPrimary hover:underline"
+                >
                     See details
                 </Link>
             </div>
