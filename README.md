@@ -8,11 +8,42 @@ Clone o repositório do projeto:
 Execute os seguintes comandos para configurar o Frontend.
 -  Frontend:
     - Entre na pasta do frontend:
-      -  cd pokedex-pro
+      ```bash 
+      cd frontend
+      ```
+    - Ajustar env com base no env.example
     - Instale as dependências:
-      -  npm install
+      ```bash 
+      npm install
+      ```
     - Inicie o servidor de desenvolvimento do frontend:
-      - npm run dev
+      ```bash 
+      npm run dev
+      ```
+
+Execute os seguintes comandos para configurar o Backend.
+-  Backend:
+    - Entre na pasta do backend:
+      ```bash 
+      cd backend
+      ```
+    - Ajustar env com base no env.example
+    - Instale as dependências:
+      ```bash 
+      npm install
+      ```
+    - Criar base de dados:
+      ```bash 
+      npx prisma migrate deploy
+      ```
+    - Criar tipos do prisma:
+      ```bash 
+      npx prisma migrate generate
+      ```
+    - Inicie o servidor de desenvolvimento do backend:
+      ```bash 
+      npm run dev
+      ```
 
 ### Versão do NODE   
     v20.10.0
@@ -31,6 +62,20 @@ Execute os seguintes comandos para configurar o Frontend.
     "react-router-dom": "^6.20.1",
     "react-toastify": "^9.1.3",
     "zod": "^3.22.4"
+    },
+
+### Depêndencias do Backend
+    "dependencies": {
+    "@prisma/client": "^5.6.0",
+    "@types/cors": "^2.8.17",
+    "@types/jsonwebtoken": "^9.0.5",
+    "axios": "^1.6.2",
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
+    "jsonwebtoken": "^9.0.2",
+    "tsc": "^2.0.4"
     },
 
 ### Vídeo e testes do Projeto
