@@ -6,7 +6,7 @@ export function storageUserSave(user: User) {
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
 }
 
-export function storageUserGet(): null {
+export function storageUserGet(): null | User {
     const storage = localStorage.getItem(USER_STORAGE_KEY);
 
     if (storage) {
@@ -14,6 +14,15 @@ export function storageUserGet(): null {
     }
 
     return null;
+}
+
+export function storageUserRefresh(updatedUser: Partial<User>) {
+    const currentUser = storageUserGet();
+
+    if (currentUser) {
+        const refreshedUser: User = { ...currentUser, ...updatedUser };
+        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(refreshedUser));
+    }
 }
 
 export function storageUserRemove() {

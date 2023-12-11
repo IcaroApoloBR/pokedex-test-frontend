@@ -36,12 +36,15 @@ function Profile() {
                         Wow!, You've been a pokemon trainer{" "}
                         <b>{moment(user.created_at).format("LL")}</b>
                     </span>
-                    <div className="flex flex-col gap-1">
-                        <span>Look at your team <b>{user.team?.name}</b></span>
-                        {user.team?.pokemon.map((pokemon) => (
-                            <span key={pokemon.id}>{pokemon.name}</span>
-                        ))}
-                    </div>
+
+                    {user.team &&
+                        <div className="flex flex-col gap-1">
+                            <span>Look at your team <b>{user.team?.name}</b></span>
+                            {user.team?.pokemon.map((pokemon) => (
+                                <span key={pokemon.id}>{pokemon.name}</span>
+                            ))}
+                        </div>
+                    }
                 </div>
             </main>
 

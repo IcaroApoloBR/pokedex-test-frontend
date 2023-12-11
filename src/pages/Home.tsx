@@ -14,10 +14,8 @@ import { Modal } from "../components/Modal";
 import { Button } from "../components/Button";
 import { createTeam } from "../services/api";
 import { toast } from "react-toastify";
-import { storageUserGet } from "../storage/storageUser";
-import { User } from "../types/User";
-import { Link } from "react-router-dom";
-
+import { storageUserGet, storageUserRefresh } from "../storage/storageUser";
+import { Team, User } from "../types/User";
 
 export default function Home() {
     const { pokemons, fetchPokemons } = usePokemon();
@@ -38,6 +36,8 @@ export default function Home() {
             pokemon: [] as Pokemon[],
         }
     };
+
+    console.log(user)
 
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [filterType, setFilterType] = useState<string>('');
@@ -80,6 +80,25 @@ export default function Home() {
 
         try {
             await createTeam(nameTeam)
+
+            console.log('user')
+            const currentUser = storageUserGet();
+            console.log(currentUser)
+            console.log('currentUser')
+
+
+            if (currentUser) {
+                const updatedUser: Partial<User> = currentUser;
+
+                if (!updatedUser.team) {
+                    updatedUser.team = {} as Team
+                }
+
+                updatedUser.team.name
+
+                storageUserRefresh(updatedUser);
+            }
+
             toast.success("Team successfully created");
 
         } catch (error) {
@@ -132,9 +151,9 @@ export default function Home() {
                         </div>
 
                         {user.team ?
-                            <Link to="/profile" className="text-gray-900 dark:text-gray-200 hover:scale-95">
-                                View team
-                            </Link>
+                            <span className="text-gray-900 dark:text-gray-200 hover:scale-95">
+                                View team on profile page
+                            </span>
                             :
                             <Button type="button"
                                 onClick={() => setOpenModalCreateTeam(true)}

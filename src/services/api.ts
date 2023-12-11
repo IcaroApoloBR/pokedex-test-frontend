@@ -82,6 +82,7 @@ export const auth = async (email: string, password: string) => {
   }
 };
 
+
 export const createTeam = async (name: string) => {
   try {
     const response = await axios.post(`${URL_BASE_API}/teams/create`, {

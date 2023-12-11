@@ -5,7 +5,7 @@ import { addPokeTeam } from '../services/api';
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { Link } from 'react-router-dom';
-import { User } from '../types/User';
+import {  User } from '../types/User';
 import { storageUserGet } from '../storage/storageUser';
 
 const user: User = storageUserGet() || {
