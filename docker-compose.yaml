@@ -15,12 +15,14 @@ services:
   frontend:
     environment:
       URL_POKE_API_WEB: https://pokeapi.co/api/v2
-      URL_BASE_API: http://127.0.0.1:3000
+      URL_BASE_API: http://backend:3000
     build:
       context: ./frontend
     network_mode: host
     ports:
       - 5173:5173
+    depends_on:
+      - backend
     restart: always
 
   backend:
