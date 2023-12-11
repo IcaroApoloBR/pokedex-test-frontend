@@ -5,6 +5,11 @@
 Clone o repositório do projeto:
 -  git clone https://github.com/IcaroApoloBR/pokedex-test-frontend.git
 
+- Tive problemas no Docker para subir o projeto, devido a orm do prisma, levantar banco de dados por ele
+  - docker-compose up --build --no-recreate -d
+  - docker-compose up -d
+  - docker exec -it {nome do container} sh
+
 Execute os seguintes comandos para configurar o Frontend.
 -  Frontend:
     - Entre na pasta do frontend:
