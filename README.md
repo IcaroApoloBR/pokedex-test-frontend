@@ -1,5 +1,45 @@
 # Desafio Técnico Bean Softwares - Front end Developer React
 
+# Projeto Pokémon Web
+
+## Fluxo de Autenticação
+
+Implementação de um sistema robusto de cadastro e login, utilizando validações eficientes com React Hook Forms e Zod. Além disso, o armazenamento seguro do token JWT é gerenciado através da funcionalidade de storage.
+
+## Filtros Pokémon
+
+Facilitando a busca e filtragem dos Pokémon com:
+
+- Pesquisa por nome
+- Seleção de tipo
+- Ordenação por ID e ordem alfabética
+- Paginação com limites ajustáveis de itens por página
+
+## useContext
+
+Utilização do hook `useContext` para criar um contexto contendo todos os Pokémon e o Theme Provider para suportar o modo escuro na aplicação.
+
+## Navegação
+
+- **Página Home:** Listagem principal de Pokémons.
+- **Seção de Informações Detalhadas:** Detalhes específicos de cada Pokémon.
+- **Roteamento para Evoluções e Perfil:** Navegação clara para visualização de evoluções e perfis individuais.
+
+## Layout
+
+- **Navbar Navegável:** Facilita a movimentação pela aplicação.
+- **Footer Interativo:** Inclui links para redes sociais.
+- **Responsividade:** Garantir uma experiência consistente em diferentes dispositivos.
+
+## Recursos Adicionais
+
+- **Teste de Rotas no Insomnia:** Arquivo dedicado para testar as rotas da API.
+- **Docker-Compose:** Inicialização do ambiente com o arquivo docker-compose.
+- **Instruções de Instalação:** Guia para configurar e executar o projeto.
+- **Vídeos Representativos:** Incluí vídeos demonstrativos do projeto em funcionamento para uma compreensão visual.
+
+Sinta-se à vontade para explorar, contribuir e personalizar conforme necessário. Boas codificações!
+
 ### Instruções.
 
 Clone o repositório do projeto:
