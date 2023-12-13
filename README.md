@@ -83,7 +83,7 @@ Execute os seguintes comandos para configurar o Backend.
       ```
     - Criar tipos do prisma:
       ```bash 
-      npx prisma migrate generate
+      npx prisma generate
       ```
     - Inicie o servidor de desenvolvimento do backend:
       ```bash 
